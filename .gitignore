@@ -1,0 +1,30 @@
+# 環境変数ファイル
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ログファイル
+*.log
+
+# 注意: service_account.jsonは通常.gitignoreに含めますが、
+# Renderへのデプロイには必要なので、このプロジェクトでは含めません
+# 本番環境では環境変数として管理することを推奨
