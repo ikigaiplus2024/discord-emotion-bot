@@ -51,18 +51,25 @@ async def post_message(channel_id, message_text, token):
         except Exception as e:
             logger.error(f"投稿エラー: {e}")
         finally:
+            await asyncio.sleep(0.5)  # 少し待機
             await client.close()
     
     try:
         await client.start(token)
     except Exception as e:
         logger.error(f"接続エラー: {e}")
+    finally:
+        # セッションを完全にクローズ
+        await asyncio.sleep(0.5)
 
 async def post_morning(token):
     """朝9:00の投稿を実行"""
     message_text = (
         "🌅 **今日はどんな気分でスタート？**\n\n"
-        "下のスタンプで今の気分を教えてね！\n"
+        "下のスタンプで今の気分を教えてね！\n\n"
+        "😄最高 😊楽しい 😌良い感じ 💪頑張ってる\n"
+        "😐普通 😴眠い 😤イライラ 😔モヤモヤ\n"
+        "😟不安 😞つらい\n"
         "━━━━━━━━━━━━━━━━━━"
     )
     logger.info("朝の投稿を実行します")
@@ -71,8 +78,11 @@ async def post_morning(token):
 async def post_noon(token):
     """昼12:00の投稿を実行"""
     message_text = (
-        "☀️ **ここまでの学校の時間、どうだった？**\n\n"
-        "下のスタンプで今の気分を教えてね！\n"
+        "☀️ **今日のフォレストリンクはどうだった？**\n\n"
+        "下のスタンプで今の気分を教えてね！\n\n"
+        "😄最高 😊楽しい 😌良い感じ 💪頑張ってる\n"
+        "😐普通 😴眠い 😤イライラ 😔モヤモヤ\n"
+        "😟不安 😞つらい\n"
         "━━━━━━━━━━━━━━━━━━"
     )
     logger.info("昼の投稿を実行します")
