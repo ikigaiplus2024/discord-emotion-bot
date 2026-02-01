@@ -44,10 +44,24 @@ EMOTION_MAP = {
 def get_sheets_client():
     """Google Sheetsクライアントを取得"""
     try:
-        creds = Credentials.from_service_account_file(
-            'service_account.json', 
-            scopes=SCOPES
-        )
+        # 環境変数からGoogle認証情報を取得
+        credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+        
+        if credentials_json:
+            # 環境変数から読み込む場合（本番環境）
+            import json
+            credentials_dict = json.loads(credentials_json)
+            creds = Credentials.from_service_account_info(
+                credentials_dict,
+                scopes=SCOPES
+            )
+        else:
+            # ファイルから読み込む場合（ローカル開発用）
+            creds = Credentials.from_service_account_file(
+                'service_account.json', 
+                scopes=SCOPES
+            )
+        
         client = gspread.authorize(creds)
         return client
     except Exception as e:
@@ -106,7 +120,7 @@ async def on_raw_reaction_add(payload):
         time_slot = None
         if "今日はどんな気分でスタート" in message.content:
             time_slot = '朝9:00'
-        elif "ここまでの学校の時間" in message.content:
+        elif "今日のフォレストリンクはどうだった" in message.content:
             time_slot = '昼12:00'
         else:
             return
