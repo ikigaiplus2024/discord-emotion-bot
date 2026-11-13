@@ -69,11 +69,20 @@ def discord_get(path):
 
 
 def find_today_message(channel_id, bot_id, today):
-    """そのチャンネルでBotが今日投稿したメッセージを探す"""
-    for m in discord_get(f'/channels/{channel_id}/messages?limit=50'):
-        posted = datetime.datetime.fromisoformat(m['timestamp']).astimezone(JST).date()
-        if m['author']['id'] == bot_id and posted == today:
-            return m
+    """そのチャンネルでBotが今日投稿したメッセージを探す
+    にぎやかなチャンネルでは投稿後に100件以上書き込まれるので、昨日の分に届くまでさかのぼる"""
+    before = ''
+    for _ in range(10):  # 最大1000件まで
+        msgs = discord_get(f'/channels/{channel_id}/messages?limit=100{before}')
+        if not msgs:
+            return None
+        for m in msgs:
+            posted = datetime.datetime.fromisoformat(m['timestamp']).astimezone(JST).date()
+            if posted < today:
+                return None
+            if m['author']['id'] == bot_id:
+                return m
+        before = f'&before={msgs[-1]["id"]}'
     return None
 
 
